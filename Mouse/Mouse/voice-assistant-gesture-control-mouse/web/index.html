@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <title>PIXEL Assistant</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="/eel.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="chat-header">
+        <div class="header-content">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fas fa-hand-sparkles"></i>
+                </div>
+                <div class="brand-info">
+                    <h1 class="brand-title">PIXEL</h1>
+                    <p class="brand-subtitle">AI Assistant</p>
+                </div>
+            </div>
+            
+            <div class="header-controls">
+                <div class="status-indicator">
+                    <div class="status-dot active"></div>
+                    <span class="status-text">Online</span>
+                </div>
+                
+                <button class="control-btn" id="themeToggle" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <button class="control-btn" id="settingsBtn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <div class="messages-wrapper">
+            <div id="messages" class="messages-area">
+                <div class="welcome-message">
+                    <div class="welcome-icon">
+                        <i class="fas fa-hand-sparkles"></i>
+                    </div>
+                    <h3>Welcome to PIXEL!</h3>
+                    <p>Your AI-powered voice and gesture control assistant is ready.</p>
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="sendQuickCommand('pixel help')">
+                            <i class="fas fa-question-circle"></i> Help
+                        </button>
+                        <button class="quick-btn" onclick="sendQuickCommand('pixel status')">
+                            <i class="fas fa-info-circle"></i> Status
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-wrapper">
+                <div class="input-group">
+                    <button class="voice-btn" id="voiceBtn" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    
+                    <input type="text" 
+                           id="userInput" 
+                           placeholder="Type your message or use voice..." 
+                           class="message-input"
+                           autocomplete="off">
+                    
+                    <button id="userInputButton" class="send-btn" title="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <div class="input-suggestions" id="suggestions" style="display: none;">
+                    <div class="suggestion-item" data-command="pixel open notepad">
+                        <i class="fas fa-file-alt"></i> Open Notepad
+                    </div>
+                    <div class="suggestion-item" data-command="pixel volume up">
+                        <i class="fas fa-volume-up"></i> Volume Up
+                    </div>
+                    <div class="suggestion-item" data-command="pixel take screenshot">
+                        <i class="fas fa-camera"></i> Screenshot
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Visualization -->
+    <div class="voice-visualization" id="voiceViz" style="display: none;">
+        <div class="voice-waves">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+        </div>
+        <p class="voice-status">Listening...</p>
+    </div>
+
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

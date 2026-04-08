@@ -1,0 +1,579 @@
+{% extends "base.html" %}
+
+{% block title %}PIXEL - Advanced Control System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" data-aos="fade-up">
+    <div class="hero-background">
+        <div class="hero-particles"></div>
+        <div class="hero-gradient"></div>
+    </div>
+    
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">PIXEL</span>
+                        <span class="hero-subtitle">Advanced Control System</span>
+                    </h1>
+                    <p class="hero-description">Experience next-generation human-computer interaction with AI-powered voice commands and precision gesture control.</p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">40+</span>
+                            <span class="stat-label">Voice Commands</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">10</span>
+                            <span class="stat-label">Gesture Types</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">99%</span>
+                            <span class="stat-label">Accuracy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left">
+                <!-- Advanced Control Panel -->
+                <div class="control-panel glass-card">
+                    <div class="panel-header">
+                        <h3 class="panel-title">
+                            <i class="fas fa-microchip me-2"></i>Control Hub
+                        </h3>
+                        <div class="panel-status">
+                            <span class="status-badge" id="systemStatusBadge">Ready</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Gesture Control Module -->
+                    <div class="control-module">
+                        <div class="module-header">
+                            <div class="module-icon gesture-icon">
+                                <i class="fas fa-hand-paper"></i>
+                            </div>
+                            <div class="module-info">
+                                <h5 class="module-title">Gesture Control</h5>
+                                <p class="module-subtitle">Hand tracking & recognition</p>
+                            </div>
+                            <div class="module-status">
+                                <div class="status-indicator" id="gestureStatus">
+                                    <div class="status-dot inactive"></div>
+                                    <span class="status-text">Inactive</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="module-controls">
+                            <button id="startGesture" class="btn btn-primary btn-modern">
+                                <i class="fas fa-play me-2"></i>Start
+                            </button>
+                            <button id="stopGesture" class="btn btn-outline-primary btn-modern">
+                                <i class="fas fa-stop me-2"></i>Stop
+                            </button>
+                        </div>
+                        
+                        <!-- Gesture Visualization -->
+                        <div class="gesture-viz" id="gestureViz" style="display: none;">
+                            <canvas id="gestureCanvas" width="200" height="150"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Voice Control Module -->
+                    <div class="control-module">
+                        <div class="module-header">
+                            <div class="module-icon voice-icon">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <div class="module-info">
+                                <h5 class="module-title">Voice Control</h5>
+                                <p class="module-subtitle">AI speech recognition</p>
+                            </div>
+                            <div class="module-status">
+                                <div class="status-indicator" id="voiceStatus">
+                                    <div class="status-dot inactive"></div>
+                                    <span class="status-text">Inactive</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="module-controls">
+                            <button id="startVoice" class="btn btn-success btn-modern">
+                                <i class="fas fa-play me-2"></i>Start
+                            </button>
+                            <button id="stopVoice" class="btn btn-outline-success btn-modern">
+                                <i class="fas fa-stop me-2"></i>Stop
+                            </button>
+                        </div>
+                        
+                        <!-- Voice Waveform -->
+                        <div class="voice-waveform" id="voiceWaveform" style="display: none;">
+                            <div class="waveform-bars">
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Command Interface -->
+                    <div class="command-interface">
+                        <div class="command-input-wrapper">
+                            <div class="input-group modern-input">
+                                <span class="input-group-text">
+                                    <i class="fas fa-terminal"></i>
+                                </span>
+                                <input type="text" id="voiceInput" class="form-control" placeholder="Enter command or say 'pixel...'">
+                                <button id="sendVoiceCommand" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="command-actions">
+                            <button id="showCommands" class="btn btn-ghost btn-sm">
+                                <i class="fas fa-list me-1"></i>Commands
+                            </button>
+                            <button id="voiceHelp" class="btn btn-ghost btn-sm">
+                                <i class="fas fa-question-circle me-1"></i>Help
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Command List -->
+                    <div id="commandsList" class="command-list" style="display: none;">
+                        <div class="command-list-header">
+                            <h6><i class="fas fa-terminal me-2"></i>Available Commands</h6>
+                        </div>
+                        <div id="commandsContainer" class="commands-grid">
+                            Loading commands...
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Feed -->
+                    <div class="activity-feed">
+                        <div class="feed-header">
+                            <h6><i class="fas fa-activity me-2"></i>Activity</h6>
+                            <button class="btn btn-ghost btn-xs" id="clearActivity">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div id="statusMessages" class="feed-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5" data-aos="fade-up">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Powerful Features</h2>
+            <p class="section-subtitle">Advanced capabilities at your fingertips</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card modern-card">
+                    <div class="feature-icon mouse-control">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h5 class="feature-title">Precision Control</h5>
+                    <p class="feature-description">Smooth cursor movement with advanced hand tracking</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card modern-card">
+                    <div class="feature-icon voice-control">
+                        <i class="fas fa-microphone-alt"></i>
+                    </div>
+                    <h5 class="feature-title">Voice Commands</h5>
+                    <p class="feature-description">40+ AI-powered voice commands for system control</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card modern-card">
+                    <div class="feature-icon gesture-recognition">
+                        <i class="fas fa-hand-rock"></i>
+                    </div>
+                    <h5 class="feature-title">Gesture Recognition</h5>
+                    <p class="feature-description">Multi-hand gesture detection with real-time feedback</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card modern-card">
+                    <div class="feature-icon system-integration">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h5 class="feature-title">System Integration</h5>
+                    <p class="feature-description">Deep OS integration for seamless control</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Instructions Section -->
+<section class="instructions-section py-5">
+    <div class="container">
+        <div class="section-header text-center mb-5" data-aos="fade-up">
+            <h2 class="section-title">Quick Start Guide</h2>
+            <p class="section-subtitle">Master the controls in minutes</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="instruction-card glass-card">
+                    <div class="instruction-header">
+                        <div class="instruction-icon gesture-icon">
+                            <i class="fas fa-hand-paper"></i>
+                        </div>
+                        <h4 class="instruction-title">Gesture Controls</h4>
+                    </div>
+                    
+                    <div class="gesture-list">
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-hand-point-up"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Index Finger Up</strong>
+                                <span>Move cursor / Navigate</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-thumbs-up"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Thumbs Up</strong>
+                                <span>Left click / Select</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-hand-peace"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Peace Sign (V)</strong>
+                                <span>Right click</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-hand-rock"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Closed Fist</strong>
+                                <span>Drag mode / Hold click</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-hand-scissors"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Three Fingers</strong>
+                                <span>Scroll up/down</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-hand-paper"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Open Palm (5 Fingers)</strong>
+                                <span>Stop all actions / Reset</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-compress-arrows-alt"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Pinch Gesture</strong>
+                                <span>Zoom in/out / Scale</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-hand-spock"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Four Fingers</strong>
+                                <span>Volume control / Brightness</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-arrows-alt"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Swipe Left/Right</strong>
+                                <span>Navigate back/forward</span>
+                            </div>
+                        </div>
+                        
+                        <div class="gesture-item">
+                            <div class="gesture-demo">
+                                <i class="fas fa-mouse"></i>
+                            </div>
+                            <div class="gesture-info">
+                                <strong>Double Tap</strong>
+                                <span>Double click / Open</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="instruction-card glass-card">
+                    <div class="instruction-header">
+                        <div class="instruction-icon voice-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <h4 class="instruction-title">Voice Commands</h4>
+                    </div>
+                    <div class="command-categories">
+                        <div class="command-category">
+                            <h6 class="category-title">
+                                <i class="fas fa-desktop me-2"></i>System
+                            </h6>
+                            <div class="command-tags">
+                                <span class="command-tag">pixel open notepad</span>
+                                <span class="command-tag">pixel open chrome</span>
+                                <span class="command-tag">pixel close window</span>
+                                <span class="command-tag">pixel take screenshot</span>
+                            </div>
+                        </div>
+                        
+                        <div class="command-category">
+                            <h6 class="category-title">
+                                <i class="fas fa-mouse me-2"></i>Navigation
+                            </h6>
+                            <div class="command-tags">
+                                <span class="command-tag">pixel go back</span>
+                                <span class="command-tag">pixel new tab</span>
+                                <span class="command-tag">pixel refresh page</span>
+                                <span class="command-tag">pixel switch window</span>
+                            </div>
+                        </div>
+                        
+                        <div class="command-category">
+                            <h6 class="category-title">
+                                <i class="fas fa-edit me-2"></i>Text
+                            </h6>
+                            <div class="command-tags">
+                                <span class="command-tag">pixel copy text</span>
+                                <span class="command-tag">pixel paste text</span>
+                                <span class="command-tag">pixel select all</span>
+                                <span class="command-tag">pixel save file</span>
+                            </div>
+                        </div>
+                        
+                        <div class="command-category">
+                            <h6 class="category-title">
+                                <i class="fas fa-music me-2"></i>Media
+                            </h6>
+                            <div class="command-tags">
+                                <span class="command-tag">pixel play music</span>
+                                <span class="command-tag">pixel volume up</span>
+                                <span class="command-tag">pixel next song</span>
+                                <span class="command-tag">pixel mute sound</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="command-tip">
+                        <div class="tip-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="tip-content">
+                            <strong>Pro Tip:</strong> All commands start with "pixel". Try "pixel search google cats" or "pixel volume up".
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const startGestureBtn = document.getElementById('startGesture');
+    const stopGestureBtn = document.getElementById('stopGesture');
+    const startVoiceBtn = document.getElementById('startVoice');
+    const stopVoiceBtn = document.getElementById('stopVoice');
+    const sendVoiceCommandBtn = document.getElementById('sendVoiceCommand');
+    const voiceInput = document.getElementById('voiceInput');
+    const gestureStatus = document.getElementById('gestureStatus');
+    const voiceStatus = document.getElementById('voiceStatus');
+    const statusMessages = document.getElementById('statusMessages');
+    const showCommandsBtn = document.getElementById('showCommands');
+    const commandsList = document.getElementById('commandsList');
+    const commandsContainer = document.getElementById('commandsContainer');
+
+    // Load available commands
+    loadAvailableCommands();
+
+    function loadAvailableCommands() {
+        fetch('/get_commands')
+            .then(response => response.json())
+            .then(data => {
+                if (data.commands && data.commands.length > 0) {
+                    const commandsHtml = data.commands.map(cmd => 
+                        `<span class="badge bg-secondary me-1 mb-1">${cmd}</span>`
+                    ).join('');
+                    commandsContainer.innerHTML = commandsHtml;
+                } else {
+                    commandsContainer.innerHTML = '<em>No commands available</em>';
+                }
+            })
+            .catch(() => {
+                commandsContainer.innerHTML = '<em>Could not load commands</em>';
+            });
+    }
+
+    function showMessage(message, type = 'info') {
+        const alertClass = type === 'error' ? 'alert-danger' : 
+                          type === 'success' ? 'alert-success' : 'alert-info';
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `alert ${alertClass} alert-dismissible fade show`;
+        messageDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        statusMessages.appendChild(messageDiv);
+        
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.remove();
+            }
+        }, 5000);
+    }
+
+    function updateStatus(element, isActive, text) {
+        const statusDot = element.querySelector('.status-dot');
+        const statusText = element.querySelector('.status-text');
+        if (isActive) {
+            statusDot.className = 'status-dot active';
+            statusText.textContent = 'Active';
+        } else {
+            statusDot.className = 'status-dot inactive';
+            statusText.textContent = 'Inactive';
+        }
+    }
+
+    startGestureBtn.addEventListener('click', function() {
+        fetch('/start_gesture', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.status);
+                if (data.status === 'success') {
+                    updateStatus(gestureStatus, true);
+                }
+            })
+            .catch(error => {
+                showMessage('Error starting gesture control', 'error');
+            });
+    });
+
+    stopGestureBtn.addEventListener('click', function() {
+        fetch('/stop_gesture', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.status);
+                updateStatus(gestureStatus, false);
+            })
+            .catch(error => {
+                showMessage('Error stopping gesture control', 'error');
+            });
+    });
+
+    startVoiceBtn.addEventListener('click', function() {
+        fetch('/start_voice', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.status);
+                if (data.status === 'success') {
+                    updateStatus(voiceStatus, true);
+                }
+            })
+            .catch(error => {
+                showMessage('Error starting voice control', 'error');
+            });
+    });
+
+    stopVoiceBtn.addEventListener('click', function() {
+        fetch('/stop_voice', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.status);
+                updateStatus(voiceStatus, false);
+            })
+            .catch(error => {
+                showMessage('Error stopping voice control', 'error');
+            });
+    });
+
+    sendVoiceCommandBtn.addEventListener('click', function() {
+        const command = voiceInput.value.trim();
+        if (command) {
+            fetch('/process_voice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ command: command })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(`Command processed: ${command}`, data.status);
+                voiceInput.value = '';
+            })
+            .catch(error => {
+                showMessage('Error processing voice command', 'error');
+            });
+        }
+    });
+
+    voiceInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendVoiceCommandBtn.click();
+        }
+    });
+
+    showCommandsBtn.addEventListener('click', function() {
+        if (commandsList.style.display === 'none') {
+            commandsList.style.display = 'block';
+            showCommandsBtn.innerHTML = '<i class="fas fa-eye-slash me-1"></i>Hide Commands';
+            loadAvailableCommands();
+        } else {
+            commandsList.style.display = 'none';
+            showCommandsBtn.innerHTML = '<i class="fas fa-list me-1"></i>Show Available Commands';
+        }
+    });
+});
+</script>
+{% endblock %}

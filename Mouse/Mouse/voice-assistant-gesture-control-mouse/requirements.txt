@@ -1,0 +1,11 @@
+Flask
+opencv-python
+mediapipe
+pyautogui
+pyttsx3
+SpeechRecognition
+pynput
+wikipedia
+pycaw
+screen-brightness-control
+comtypes
